@@ -1,4 +1,4 @@
-# PromERP — Импортонезависимая ERP-платформа для дискретного производства
+# PromERP — Импортонезависимая ERP-платформа для производства
 
 [![Демо-стенд](https://img.shields.io/badge/Онлайн--демо-test.promerp.ru-007ACC?style=for-the-badge&logo=internet-explorer&logoColor=white)](https://test.promerp.ru/)
 [![Документация](https://img.shields.io/badge/Документация-Интерактивная%20база-green?style=for-the-badge&logo=gitbook&logoColor=white)](https://test.promerp.ru/docs)
