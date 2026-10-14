@@ -149,7 +149,7 @@ PromERP закрывает ключевые задачи предприятия 
 
 1. **Клонируйте репозиторий:**
    ```bash
-   git clone https://github.com/your-org/promerp.git
+   git clone https://github.com/starley1234/promerp.ru.git
    cd promerp
    ```
 
