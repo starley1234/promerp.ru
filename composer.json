@@ -1,0 +1,32 @@
+{
+    "name": "app/skeleton",
+    "type": "project",
+    "require": {
+        "php": "^8.4",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^7.9",
+        "phpoffice/phpspreadsheet": "^3.0",
+        "phpoffice/phpword": "^1.3",
+        "dompdf/dompdf": "^3.0",
+        "monolog/monolog": "^3.8",
+        "nesbot/carbon": "^3.8",
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/mailer": "^7.2",
+        "php-mqtt/client": "^2.1",
+        "php-amqplib/php-amqplib": "^3.7",
+        "league/commonmark": "^2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "suggest": {
+        "aws/aws-sdk-php": "S3-совместимое хранилище файлов (erp212_file_storage): без пакета работает драйвер локального диска"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {}
+    }
+}

@@ -1,0 +1,22 @@
+# --- Локальные конфиги и секреты (генерируются: bash bin/setup.sh) ---------
+/.env
+/.env.*
+!/\.env.example
+
+# --- Изменяемые каталоги ---------------------------------------------------
+/application/logs/
+/application/cache/
+/application/sessions/
+/public_html/uploads/
+/public_html/avatar/
+/public_html/img/
+/public_html/assets/libs
+/public_html/storage
+
+# --- Зависимости и сборка --------------------------------------------------
+/vendor
+node_modules/
+/composer.lock
+/build
+/error_log
+composer.phar

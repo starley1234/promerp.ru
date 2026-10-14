@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Конфигурация PHPUnit (используется, если установлен composer-пакет phpunit/phpunit).
+  Без PHPUnit работает встроенный раннер: bin/test (tests/run.php + tests/stubs.php).
+
+  Запуск:  vendor/bin/phpunit -c tests/phpunit.xml.dist
+           vendor/bin/phpunit -c tests/phpunit.xml.dist --filter=Smoke
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         colors="true"
+         cacheDirectory="../build/phpunit-cache"
+         failOnWarning="false"
+         failOnRisky="false"
+         beStrictAboutOutputDuringTests="false">
+    <testsuites>
+        <testsuite name="PromERP">
+            <directory suffix="Test.php">Unit</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">../application/classes</directory>
+            <directory suffix=".php">../application/modules</directory>
+        </include>
+        <exclude>
+            <directory>../application/cache</directory>
+            <directory>../application/logs</directory>
+            <directory>../application/modules/*/views</directory>
+        </exclude>
+    </source>
+</phpunit>

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Запуск тестов.
+#
+#   bin/test                  # все тесты
+#   bin/test --filter=Valid   # фильтр по имени (только PHPUnit)
+#
+# Если установлен PHPUnit — используем его, иначе встроенный раннер tests/run.php.
+#
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# shellcheck disable=SC1091
+source bin/env.sh
+
+PHP_BIN="$(promerp_php || true)"
+
+if [ -z "$PHP_BIN" ]; then
+    echo "PHP 8.1+ не найден. Укажите путь явно: PHP_BIN=/path/to/php bin/test" >&2
+    exit 1
+fi
+
+if [[ -x vendor/bin/phpunit ]]; then
+    exec vendor/bin/phpunit -c tests/phpunit.xml.dist "$@"
+fi
+
+echo "PHPUnit не найден — используем встроенный раннер tests/run.php" >&2
+exec "$PHP_BIN" tests/run.php "$@"

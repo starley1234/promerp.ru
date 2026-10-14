@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Локальный dev-сервер без Docker (встроенный сервер PHP).
+#
+#   bin/serve            # http://127.0.0.1:8080
+#   PORT=9000 bin/serve
+#
+# Для «чистых» URL (index_file = FALSE) используется роутер bin/router.php.
+#
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# shellcheck disable=SC1091
+source bin/env.sh
+
+PORT="${PORT:-8080}"
+HOST="${HOST:-0.0.0.0}"
+PHP_BIN="$(promerp_php || true)"
+
+if [ -z "$PHP_BIN" ]; then
+    echo "PHP 8.1+ не найден. Укажите путь явно: PHP_BIN=/path/to/php bin/serve" >&2
+    exit 1
+fi
+
+echo "PromERP dev server: http://${HOST}:${PORT}"
+exec "$PHP_BIN" -S "${HOST}:${PORT}" -t public_html bin/router.php

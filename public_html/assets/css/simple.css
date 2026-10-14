@@ -1,0 +1,52 @@
+/*
+ * Простой режим интерфейса (Ui_Mode): крупнее, свободнее, без лишнего.
+ *
+ * Файл подключает шаблон всегда, а правила действуют только под
+ * html[data-ui="simple"] — в профессиональном режиме он ничего не меняет.
+ * Руками написан намеренно: сборка Tailwind (input.css → app.css) не нужна,
+ * чтобы поправить масштаб или отступы.
+ *
+ * Что здесь, а что в компонентах: СТРУКТУРУ (таблица → плитки, фильтры →
+ * «Фильтры», KPI крупнее) меняют компоненты в application/views/components,
+ * а здесь — только масштаб и мелочи, для которых PHP не нужен.
+ */
+
+/* Весь интерфейс на ~6% крупнее: размеры Tailwind заданы в rem. */
+html[data-ui="simple"] {
+    font-size: 17px;
+}
+
+/* Цели нажатия не меньше 44 px: кнопки, поля и ссылки-кнопки в содержимом. */
+html[data-ui="simple"] #main-content button,
+html[data-ui="simple"] #main-content select,
+html[data-ui="simple"] #main-content input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
+    min-height: 2.75rem;
+}
+
+html[data-ui="simple"] #main-content a[class*="rounded"][class*="px-"]:not(.block):not(.flex) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+}
+
+/* Таблицы, которые ещё не переведены на компонент (в простом режиме остаются
+   таблицами): строки свободнее. */
+html[data-ui="simple"] #main-content td,
+html[data-ui="simple"] #main-content th {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+}
+
+/*
+ * Мелочи без PHP. В представлении модуля Ui_Mode:: вызывать нельзя (проверяет
+ * bin/frontend-audit.py), поэтому для «показать только профессионалу» и
+ * «подсказка только новичку» есть два класса.
+ */
+html[data-ui="simple"] .pro-only {
+    display: none !important;
+}
+
+html:not([data-ui="simple"]) .simple-only {
+    display: none !important;
+}

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# Запуск CLI-задачи Kohana (Minion).
+#
+#   bin/console help                — список задач
+#   bin/console db:migrate          — миграции
+#   bin/console module:list         — инвентаризация модулей
+#   bin/console dev:doctor          — диагностика окружения
+#
+# Если docker compose запущен и в нём есть сервис php — задача выполнится в контейнере,
+# иначе — локальным интерпретатором (переопределить: PHP_BIN=/path/to/php bin/console ...).
+#
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# shellcheck disable=SC1091
+source bin/env.sh
+
+PHP_BIN="$(promerp_php || true)"
+
+if [ -z "$PHP_BIN" ]; then
+    echo "PHP 8.1+ не найден. Укажите путь явно: PHP_BIN=/path/to/php bin/console ..." >&2
+    echo "Развернуть среду: make restore (см. bin/restore-env.sh)" >&2
+    exit 1
+fi
+
+if command -v docker >/dev/null 2>&1; then
+    if docker compose ps --services 2>/dev/null | grep -qx 'php'; then
+        if docker compose ps --status=running --services 2>/dev/null | grep -qx 'php'; then
+            exec docker compose exec -T php php public_html/index.php "$@"
+        fi
+    fi
+fi
+
+exec "$PHP_BIN" public_html/index.php "$@"

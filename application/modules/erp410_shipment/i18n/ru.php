@@ -1,0 +1,41 @@
+<?php defined('SYSPATH') or die('No direct script access.');
+
+/**
+ * Переводы модуля продаж (erp410_shipment).
+ */
+return array(
+    'Sales'              => 'Продажи',
+    'Sale'               => 'Продажа',
+    'Customer Order'     => 'Заказ клиента',
+    'Customer Orders'    => 'Заказы клиентов',
+    'Order'              => 'Заказ',
+    'Orders'             => 'Заказы',
+    'Order Line'         => 'Позиция заказа',
+    'Order Lines'        => 'Позиции заказа',
+    'Shipment'           => 'Отгрузка',
+    'Shipments'          => 'Отгрузки',
+    'Shipment Line'      => 'Позиция отгрузки',
+    'Shipment Lines'     => 'Позиции отгрузки',
+    'Invoice'            => 'Счёт',
+    'Invoices'           => 'Счета',
+    'Invoice Line'       => 'Позиция счёта',
+    'Invoice Lines'      => 'Позиции счёта',
+    'Customer'           => 'Клиент',
+    'Customers'          => 'Клиенты',
+    'Price'              => 'Цена',
+    'Prices'             => 'Цены',
+    'Price List'         => 'Прайс',
+    'Credit Limit'       => 'Кредитный лимит',
+    'Payment'            => 'Оплата',
+    'Reserve'            => 'Резерв',
+    'Draft'              => 'Черновик',
+    'Confirmed'          => 'Подтверждён',
+    'Reserved'           => 'Зарезервирован',
+    'Picking'            => 'В сборке',
+    'Ready'              => 'Готова к отправке',
+    'Shipped'            => 'Отгружен',
+    'Issued'             => 'Выставлен',
+    'Paid'               => 'Оплачен',
+    'Closed'             => 'Закрыт',
+    'Cancelled'          => 'Отменён',
+);

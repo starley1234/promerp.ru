@@ -1,0 +1,95 @@
+# PromERP — стек разработки: nginx + php-fpm 8.4 + PostgreSQL 16 (pgvector) + Adminer + Mailpit
+#
+#   cp .env.example .env
+#   docker compose up -d
+#   docker compose exec app php public_html/index.php --task=db:migrate
+#   docker compose exec app php public_html/index.php --task=auth:user --email=admin@promerp.local --password=admin12345 --username=admin --admin=1
+#
+#   Приложение   http://localhost:8080
+#   Adminer      http://localhost:8081   (server=postgres, user=promerp, pass=promerp, db=promerp)
+#   Mailpit      http://localhost:8025
+#
+# ВНИМАНИЕ: в песочнице Arena Docker недоступен, поэтому этот путь не проверен;
+# проверенный способ запуска — нативный: bash bin/restore-env.sh (см. docs/DEVELOPMENT.md).
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        INSTALL_XDEBUG: "${INSTALL_XDEBUG:-0}"
+    container_name: promerp-app
+    working_dir: /srv/promerp
+    volumes:
+      - ./:/srv/promerp
+    environment:
+      KOHANA_ENV: "${KOHANA_ENV:-DEVELOPMENT}"
+      STRICT_DEPRECATIONS: "${STRICT_DEPRECATIONS:-0}"
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: "${DB_NAME:-promerp}"
+      DB_USER: "${DB_USER:-promerp}"
+      DB_PASS: "${DB_PASS:-promerp}"
+      DB_MDM_NAME: "${DB_MDM_NAME:-promerp_mdm}"
+      COOKIE_SALT: "${COOKIE_SALT:-}"
+      AUTH_HASH_KEY: "${AUTH_HASH_KEY:-}"
+      TRUSTED_HOSTS: "${TRUSTED_HOSTS:-localhost, 127\\.0\\.0\\.1(:\\d+)?, .*\\.local}"
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_SECURE: ""
+      MIGRATIONS_TOKEN: "${MIGRATIONS_TOKEN:-}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: promerp-web
+    ports:
+      - "${PORT:-8080}:80"
+    volumes:
+      - ./:/srv/promerp:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  postgres:
+    # Образ с pgvector: миграция erp222 создаёт расширение vector
+    image: pgvector/pgvector:pg16
+    container_name: promerp-db
+    environment:
+      POSTGRES_USER: "${DB_USER:-promerp}"
+      POSTGRES_PASSWORD: "${DB_PASS:-promerp}"
+      POSTGRES_DB: "${DB_NAME:-promerp}"
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/10-promerp.sql:ro
+    ports:
+      - "${DB_PORT_HOST:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-promerp} -d ${DB_NAME:-promerp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  adminer:
+    image: adminer:4
+    container_name: promerp-adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: promerp-mailpit
+    ports:
+      - "8025:8025"   # веб-интерфейс
+      - "1025:1025"   # SMTP
+
+volumes:
+  pgdata:
